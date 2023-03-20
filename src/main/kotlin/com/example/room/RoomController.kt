@@ -2,9 +2,14 @@ package com.example.room
 
 import com.example.data.MessageDataSource
 import com.example.data.model.Message
+import io.ktor.http.*
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import io.ktor.websocket.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.koin.ktor.ext.get
 import java.util.concurrent.ConcurrentHashMap
 
 class RoomController(
@@ -51,5 +56,14 @@ class RoomController(
         if(members.containsKey(username)) {
             members.remove(username)
         }
+    }
+}
+
+fun Route.getAllMessages(roomController: RoomController) {
+    get("/messages") {
+        call.respond(
+            HttpStatusCode.OK,
+            roomController.getAllMessages()
+        )
     }
 }
